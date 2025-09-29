@@ -55,6 +55,40 @@ int	Menu()
         }
 
 }
+void	Ajouter(void)
+{
+	char uniqueid[20];
+	int i;
+
+	if (numberedu == 30)
+	{
+		printf("Sorry class is Full!\n");
+		return;
+	}
+
+	printf("ENTER YOUR ID : ");
+	scanf("%s", uniqueid);
+	for (i = 0; i < numberedu; i++)
+	{
+		if (strcmp(uniqueid, class[i].cne) == 0)
+		{
+			printf("Ce numéro existe déjà. Veuillez en saisir un autre.\n");
+			Menu();
+			return;
+		}
+	}
+	strcpy(class[numberedu].cne, uniqueid);
+	scanf("%*c");
+	printf("ENTER YOUR NAME : ");
+	scanf("%[^\n]", class[numberedu].nom);
+	scanf("%*c");
+	printf("ENTER YOUR LAST NAME : ");
+	scanf("%[^\n]", class[numberedu].prenom);
+
+	numberedu++;
+	Menu();
+}
+
 void saisirNotes()
 {
 	char search_ID[20];
@@ -132,39 +166,6 @@ void	afficherEtudiants()
 	}
 	Menu();
 }
-void Ajouter(void)
-{
-	char uniqueid[20];
-	int i;
-
-	if (numberedu == 30) 
-	{
-        	printf("Sorry class is Full!\n");
-        	return;
-	}
-
-	printf("ENTER YOUR ID : ");
-	scanf("%s", uniqueid);
-	for (i = 0; i < numberedu; i++) 
-	{
-		if (strcmp(uniqueid, class[i].cne) == 0) 
-		{
-			printf("Ce numéro existe déjà. Veuillez en saisir un autre.\n");
-			Menu();
-			return;
-		}
-	}
-	strcpy(class[numberedu].cne, uniqueid);
-	scanf("%*c");
-	printf("ENTER YOUR NAME : ");
-	scanf("%s", class[numberedu].nom);
-	scanf("%*c");
-	printf("ENTER YOUR LAST NAME : ");
-	scanf("%s", class[numberedu].prenom);
-
- 	numberedu++;
-	Menu();
-}
 void	afficherBulletin(void)
 {
 	char searchCNE[20];
@@ -206,8 +207,9 @@ void	afficherBulletin(void)
 
 	if (!found) 
 	{
-		printf("Aucun etudiant avec ce CNE n'est trouvé.\n");
+		printf("Aucun etudiant avec ce CNE n'est trouve.\n");
 	}
+	Menu();
 }
 
 int	main()
