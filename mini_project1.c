@@ -98,39 +98,47 @@ void	Ajouter(void)
 	numberedu++;
 	Menu();
 }
+int	RechercherEtudiantIndex(char search_cne[]) 
+{
+	for (int place = 0; place < numberedu; place++)
+	{
+        	if (strcmp(class[place].cne, search_cne) == 0) 
+		{
+            		return place;
+		}
+	}
+	return -1;
+}
 
 void saisirNotes()
 {
 	char search_ID[20];
-	int i = 0;
-	int	found = 0;
+	int i;
 
 	printf("ENTER YOUR ID: ");
 	scanf("%s", search_ID);
+	i = RechercherEtudiantIndex(search_ID);
+	if (i == -1)
+		printf("Etudiant avec CNE %s introuvable.\n", search_ID);
 	while (i <= numberedu)
 	{
-		if (strcmp(class[i].cne, search_ID) == 0)
-		{
-			printf("enter note 1: ");
-			scanf("%f", &class[i].notes[0]);
+		printf("enter note 1: ");
+		scanf("%f", &class[i].notes[0]);
 
-			printf("enter note 2: ");
-			scanf("%f", &class[i].notes[1]);
+		printf("enter note 2: ");
+		scanf("%f", &class[i].notes[1]);
 
-			printf("enter note 3: ");
-			scanf("%f", &class[i].notes[2]);
+		printf("enter note 3: ");
+		scanf("%f", &class[i].notes[2]);
 
-			printf("enter note 4: ");
-			scanf("%f", &class[i].notes[3]);
-			found = 1;
-			calculerMoyenneEtudiant(search_ID);
-			printf("la Moyenne est :%.2f\n",class[i].moyenne);
-			break;
-		}
+		printf("enter note 4: ");
+		scanf("%f", &class[i].notes[3]);
+
+		calculerMoyenneEtudiant(search_ID);
+		printf("la Moyenne est :%.2f\n",class[i].moyenne);
+		break;
 		i++;
 	}
-	if (!found)
-		printf("We don't have any id\n");
 	Menu();
 }
 void	calculerMoyenneEtudiant(char cne[])
@@ -185,7 +193,6 @@ void	afficherBulletin(void)
 {
 	char searchCNE[20];
 	int i, j;
-	int found = 0;
 
 	if (numberedu == 0) 
 	{
@@ -195,60 +202,49 @@ void	afficherBulletin(void)
 
 	printf("Entrer le CNE de l'etudiant : ");
 	scanf("%s", searchCNE);
-
-	for (i = 0; i < numberedu; i++) 
+	for (int i = RechercherEtudiantIndex(searchCNE); i < numberedu; i++) 
 	{
-		if (strcmp(searchCNE, class[i].cne) == 0) 
+		printf("CNE : %s\n", class[i].cne);
+		printf("Nom : %s\n", class[i].nom);
+		printf("Prenom : %s\n", class[i].prenom);
+
+		printf("Notes : ");
+		float result = 0;
+		for (j = 0; j < 4; j++) 
 		{
-			found = 1;
-			printf("CNE : %s\n", class[i].cne);
-			printf("Nom : %s\n", class[i].nom);
-			printf("Prenom : %s\n", class[i].prenom);
-
-			printf("Notes : ");
-			float result = 0;
-			for (j = 0; j < 4; j++) 
-			{
-				printf("%.2f ", class[i].notes[j]);
-				result += class[i].notes[j];
-			}
-
-			class[i].moyenne = result/j;
-			printf("\nLa Moyenne de %s : %.2f\n", class[i].nom, class[i].moyenne);
-			printf("----------------------------\n");
-			break;
+			printf("%.2f ", class[i].notes[j]);
+			result += class[i].notes[j];
 		}
-	}
 
-	if (!found) 
-	{
-		printf("Aucun etudiant avec ce CNE n'est trouve.\n");
+		class[i].moyenne = result/j;
+		printf("\nLa Moyenne de %s : %.2f\n", class[i].nom, class[i].moyenne);
+		printf("----------------------------\n");
+		break;
 	}
 	Menu();
 }
 void	Deleteedudiant()
 {
 	char	search_cne[20];
-	int i = 0;
-	int j = 0;
 
 	printf("entre CNE d'etudiant: ");
 	scanf("%s", search_cne);
+	int	i = RechercherEtudiantIndex(search_cne);
+	if (i == -1)
+        	printf("Etudiant avec CNE %s introuvable.\n", search_cne);
 
+	int	j = 0;
 	while (i < numberedu)
 	{
-		if (strcmp(class[i].cne, search_cne) == 0)
+		for (j = i; j < numberedu - 1; j++) 
 		{
-			for (j = i; j < numberedu - 1; j++) 
-			{
-				class[j] = class[j + 1];
+			class[j] = class[j + 1];
 		}
 
 		numberedu--;
 		printf("Etudiant supprime avec succes.\n");
 		break;
-		}
-	i++;
+		i++;
 	}
 
     Menu();
@@ -256,30 +252,28 @@ void	Deleteedudiant()
 void	UpdateEtudiant()
 {
 	char search_cne[20];
-	int found = 0;
 
 	printf("Entrer CNE d'etudiant a modifier: ");
 	scanf("%s", search_cne);
-	int i = 0;
+	int i = RechercherEtudiantIndex(search_cne);
+	if (i == -1)
+        	printf("Etudiant avec CNE %s introuvable.\n", search_cne);
+
 	while (i < numberedu)
 	{
-        	if (strcmp(class[i].cne, search_cne) == 0)
-		{
-			found = 1;
-			printf("Etudiant trouve.\n");
+		printf("Etudiant trouve.\n");
 
-			printf("Nouveau nom: ");
-			scanf("%s", class[i].nom);
+		printf("Nouveau nom: ");
+		scanf("%s", class[i].nom);
 
-			printf("Nouveau prenom: ");
-			scanf("%s", class[i].prenom);
+		printf("Nouveau prenom: ");
+		scanf("%s", class[i].prenom);
 
-			printf("Nouvelle moyenne: ");
-			scanf("%f", &class[i].moyenne);
+		printf("Nouvelle moyenne: ");
+		scanf("%f", &class[i].moyenne);
 
-			printf("Mise a jour reussie.\n");
-			break;
-		}
+		printf("Mise a jour reussie.\n");
+		break;
 		i++;
 	}
 	Menu();
