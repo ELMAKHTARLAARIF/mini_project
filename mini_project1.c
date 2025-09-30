@@ -17,6 +17,8 @@
 	void	calculerMoyenneGenerale();
 	void	afficherEtudiants();
 	void	afficherBulletin();
+	void	Deleteedudiant();
+	void	UpdateEtudiant();
 int	Menu()
 {
 
@@ -27,6 +29,8 @@ int	Menu()
         printf("3-Afficher tous les etudiants\n");
 	printf("4-Affiche bulttane\n");
 	printf("5-Calculer Moyenne generale\n");
+	printf("6- Supprimer un etudiant\n");
+	printf("7- Mettre a jour un etudiant\n");
         printf("0-Pour Quitter\n");
         printf("entrer votre choix :");
         scanf("%d",&choix);
@@ -48,6 +52,12 @@ int	Menu()
                 case 5:
                         calculerMoyenneGenerale();
                         break;
+                case 6:
+                        Deleteedudiant();
+                        break;
+		case 7:
+			UpdateEtudiant();
+			break;
                 case 0:
                         return 0;
                 default:
@@ -159,10 +169,15 @@ void	afficherEtudiants()
 {
 	int	i;
 	i = 0;
-	while (i < numberedu)
+	if (numberedu == 0)
+		printf("Aucun etudiant n'est enregistre.\n");
+	else 
 	{
-		printf("CNE : %s    Nom : %s    Prenom : %s   la Moyenne de %s : %.2f\n",class[i].cne,class[i].nom,class[i].prenom,class[i].nom,class[i].moyenne);
-		i++;
+		while (i < numberedu)
+		{
+			printf("CNE : %s    Nom : %s    Prenom : %s   la Moyenne de %s : %.2f\n",class[i].cne,class[i].nom,class[i].prenom,class[i].nom,class[i].moyenne);
+			i++;
+		}
 	}
 	Menu();
 }
@@ -211,7 +226,64 @@ void	afficherBulletin(void)
 	}
 	Menu();
 }
+void	Deleteedudiant()
+{
+	char	search_cne[20];
+	int i = 0;
+	int j = 0;
 
+	printf("entre CNE d'etudiant: ");
+	scanf("%s", search_cne);
+
+	while (i < numberedu)
+	{
+		if (strcmp(class[i].cne, search_cne) == 0)
+		{
+			for (j = i; j < numberedu - 1; j++) 
+			{
+				class[j] = class[j + 1];
+		}
+
+		numberedu--;
+		printf("Etudiant supprime avec succes.\n");
+		break;
+		}
+	i++;
+	}
+
+    Menu();
+}
+void	UpdateEtudiant()
+{
+	char search_cne[20];
+	int found = 0;
+
+	printf("Entrer CNE d'etudiant a modifier: ");
+	scanf("%s", search_cne);
+	int i = 0;
+	while (i < numberedu)
+	{
+        	if (strcmp(class[i].cne, search_cne) == 0)
+		{
+			found = 1;
+			printf("Etudiant trouve.\n");
+
+			printf("Nouveau nom: ");
+			scanf("%s", class[i].nom);
+
+			printf("Nouveau prenom: ");
+			scanf("%s", class[i].prenom);
+
+			printf("Nouvelle moyenne: ");
+			scanf("%f", &class[i].moyenne);
+
+			printf("Mise a jour reussie.\n");
+			break;
+		}
+		i++;
+	}
+	Menu();
+}
 int	main()
 {
 	Menu();
